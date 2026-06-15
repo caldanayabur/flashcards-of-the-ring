@@ -67,7 +67,6 @@
   transition: transform 0.7s ease;
 }
 
-.flip-card:hover .flip-card-inner,
 .flip-card.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
