@@ -46,7 +46,7 @@ As part of the optional features, I included 18 images throughout the flashcards
 
 Here's a walkthrough of implemented required features:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+https://github.com/user-attachments/assets/13483af5-8123-44b2-8f87-e8923fda5b4f
 
 <!-- Replace this with whatever GIF tool you used! -->
 Video created with Clipchamp.  
