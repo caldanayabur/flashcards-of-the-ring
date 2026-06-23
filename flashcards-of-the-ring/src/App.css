@@ -288,6 +288,33 @@
 .feedback.correct  { color: green; font-weight: bold; }
 .feedback.incorrect { color: red;  font-weight: bold; }
 
+.mastered-list {
+  width: 100%;
+  max-width: 760px;
+}
+
+.mastered-list h3 {
+  margin-bottom: 0.5rem;
+}
+
+.mastered-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mastered-list th,
+.mastered-list td {
+  text-align: left;
+  padding: 0.5rem 1rem;
+  border: 1px solid #b5a28a;
+}
+
+.mastered-list th {
+  background: #3f3328;
+  color: #fff8ef;
+  font-weight: 700;
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   .flip-card-inner,

@@ -101,11 +101,13 @@ const App = () => {
   const [result, setResult] = useState(null);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [longestStreak, setLongestStreak] = useState(0);
-
-  const currentCard = cardPairs[order[position]];
+  const [masteredIndices, setMasteredIndices] = useState(new Set());
+  
+  const activeOrder = order.filter(i => !masteredIndices.has(i));
+  const currentCard = cardPairs[activeOrder[position]];
 
   const isFirst = position === 0;
-  const isLast = position === cardPairs.length - 1;
+  const isLast = position === activeOrder.length - 1;
 
   const handleFlip = () => {
     setIsFlipped((prev) => !prev);
@@ -155,6 +157,29 @@ const App = () => {
     }
   };
 
+  const handleReset = () => {
+    setMasteredIndices(new Set());
+    setPosition(0);
+    setIsFlipped(false);
+    setGuess('');
+    setResult(null);
+  };
+
+  const handleMaster = () => {
+  const cardIndex = activeOrder[position];          // which card in cardPairs
+  setMasteredIndices(prev => new Set([...prev, cardIndex]));
+
+  // Stay at the same position — the pool shrinks, so the next card slides in.
+  // But if this was the last card, step back so position stays valid.
+  if (position >= activeOrder.length - 1) {
+    setPosition(Math.max(0, position - 1));
+  }
+
+  setIsFlipped(false);
+  setGuess('');
+  setResult(null);
+};
+
   return (
     <main className="app-shell">
       <header className="header">
@@ -164,7 +189,7 @@ const App = () => {
           How much do you know about the Tolkien universe? Test yourself with this
           Lord of the Rings themed deck.
         </p>
-        <p className="card-count">Number of Cards: {cardPairs.length}</p>
+        <p className="card-count">Cards remaining: {activeOrder.length} / {cardPairs.length}</p>
         <p className= "streak-display">
           🔥 Current Streak: {currentStreak} &nbsp;|&nbsp; Best: {longestStreak}
 
@@ -172,32 +197,66 @@ const App = () => {
       </header>
 
       <section className="single-card-section" aria-label="Flashcard viewer">
-        <Flashcard
-          card={currentCard}
-          isFlipped={isFlipped}
-          onFlip={handleFlip}
-          cardNumber={position + 1}
-        />
-
-        {!isFlipped && (
-          <div className="guess-area">
-            <input
-              type="text"
-              placeholder="Type your guess..."
-              value={guess}
-              onChange={(e) => setGuess(e.target.value)}
+        {activeOrder.length === 0 ? (
+          <p>You mastered all the cards! 🎉</p>
+        ) : (
+          <>
+            <Flashcard
+              card={currentCard}
+              isFlipped={isFlipped}
+              onFlip={handleFlip}
+              cardNumber={position + 1}
             />
-            <button onClick={handleGuessSubmit}>Submit</button>
-            {result === 'correct' && <p className="feedback correct">Correct!</p>}
-            {result === 'incorrect' && <p className="feedback incorrect">Incorrect — try flipping the card!</p>}
-          </div>
+
+            <button onClick={handleMaster} disabled={activeOrder.length === 0}>
+              ✓ Mastered
+            </button>
+
+            {!isFlipped && (
+              <div className="guess-area">
+                <input
+                  type="text"
+                  placeholder="Type your guess..."
+                  value={guess}
+                  onChange={(e) => setGuess(e.target.value)}
+                />
+                <button onClick={handleGuessSubmit}>Submit</button>
+                {result === 'correct' && <p className="feedback correct">Correct!</p>}
+                {result === 'incorrect' && <p className="feedback incorrect">Incorrect — try flipping the card!</p>}
+              </div>
+            )}
+
+            <div className="nav-buttons">
+              <button onClick={handleBack} disabled={isFirst}>← Back</button>
+              <button onClick={handleShuffle}>Shuffle</button>
+              <button onClick={handleNext} disabled={isLast}>Next →</button>
+            </div>
+          </>
         )}
 
-        <div className="nav-buttons">
-          <button onClick={handleBack} disabled={isFirst}>← Back</button>
-          <button onClick={handleShuffle}>Shuffle</button>
-          <button onClick={handleNext} disabled={isLast}>Next →</button>
-        </div>
+        {masteredIndices.size > 0 && (
+          <div className="mastered-list">
+            <h3>Mastered ({masteredIndices.size}) <button onClick={handleReset}>Reset</button></h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Question</th>
+                  <th>Answer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...masteredIndices].map((i, idx) => (
+                  <tr key={i}>
+                    <td>{idx + 1}</td>
+                    <td>{cardPairs[i].question}</td>
+                    <td>{cardPairs[i].answer}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
     </main>
   );
