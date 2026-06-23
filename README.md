@@ -44,9 +44,13 @@ The mastered cards are displayed below the flashcards, where the user can see th
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented required features:
+Here are walkthroughs of the implemented required features:
+
+Part 1:
 
 https://github.com/user-attachments/assets/13483af5-8123-44b2-8f87-e8923fda5b4f
+
+Part 2:
 
 <!-- Replace this with whatever GIF tool you used! -->
 Video created with Clipchamp.  
